@@ -53,6 +53,7 @@ class Robot
     @listeners  = []
     @middleware =
       listener: new Middleware(@)
+      response: new Middleware(@)
       receive:  new Middleware(@)
     @logger     = new Log process.env.HUBOT_LOG_LEVEL or 'info'
     @pingIntervalId = null
@@ -266,6 +267,21 @@ class Robot
   # Returns nothing.
   listenerMiddleware: (middleware) ->
     @middleware.listener.register middleware
+    return undefined
+
+  # Public: Registers new middleware for execution as a response to any
+  # message is being sent.
+  #
+  # middleware - A function that examines an outgoing message and can modify
+  #              it or prevent its sending. The function is called with
+  #              (context, next, done). If execution should continue,
+  #              the middleware should call next(done). If execution should stop,
+  #              the middleware should call done(). To modify the outgoing message,
+  #              set context.string to a new message.
+  #
+  # Returns nothing.
+  responseMiddleware: (middleware) ->
+    @middleware.response.register middleware
     return undefined
 
   # Public: Registers new middleware for execution before matching

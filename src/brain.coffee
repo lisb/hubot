@@ -15,7 +15,7 @@ class Brain extends EventEmitter
 
     @autoSave = true
 
-    robot.on "running", =>
+    @robot.on "running", =>
       @resetSaveInterval 5
 
   # Public: Store key-value pair under the private namespace and extend

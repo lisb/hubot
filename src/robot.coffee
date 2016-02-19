@@ -441,7 +441,8 @@ class Robot
     app = express()
 
     app.use (req, res, next) =>
-      res.setHeader "X-Powered-By", "hubot/#{@name}"
+      encodedName = encodeURIComponent(@name)
+      res.setHeader "X-Powered-By", "hubot/#{encodedName}"
       next()
 
     app.use express.basicAuth user, pass if user and pass

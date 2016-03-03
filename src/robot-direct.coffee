@@ -18,22 +18,26 @@ _map = (msg, callback) ->
         lng:loc[2]
       callback msg
 
+    cbErr = (err) ->
+      console.log err
+      cb ''
+
     if url.indexOf("goo.gl") == -1
       cb url
     else
       msg.http("https://www.googleapis.com/urlshortener/v1/url?shortUrl=#{url}&key=#{GOOGLE_SHORTENER_API_KEY}")
         .get() (err, res, body) ->
           if err?
-            console.log err
+            cbErr err
           else
             try
               json = JSON.parse body
               if json.longUrl?
                 cb json.longUrl
               else
-                console.log json
+                cbErr json
             catch ex
-              console.log ex
+              cbErr ex
 
 # public:
 jsonMatcher = (prop, options, callback) ->

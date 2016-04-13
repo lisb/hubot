@@ -74,7 +74,6 @@ class Robot
 
     @on 'error', (err, res) =>
       @invokeErrorHandlers(err, res)
-      process.exit(1)
     @onUncaughtException = (err) =>
       @emit 'error', err
     process.on 'uncaughtException', @onUncaughtException

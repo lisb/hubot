@@ -91,6 +91,12 @@ class Brain extends EventEmitter
     for k of (data or { })
       @data[k] = data[k]
 
+    if Object.keys(@data.users).length > 0
+      @robot.logger.warning "Please use brain.users()/talks()/domains()."
+    @data.users = {}
+    @data.talks = {}
+    @data.domains = {}
+
     @emit 'loaded', @data
 
   # Public: Get an Array of User objects stored in the brain.
@@ -98,7 +104,7 @@ class Brain extends EventEmitter
   # Returns an Array of User objects.
   users: ->
     adapter = @robot.adapter
-    if adapter.users? then @data.users = adapter.users()
+    if adapter.users? then return adapter.users()
     @data.users
 
   # Public: Get a User object given a unique identifier.
@@ -159,7 +165,7 @@ class Brain extends EventEmitter
   # Returns an Array of Talk objects.
   rooms: ->
     adapter = @robot.adapter
-    if adapter.talks? then @data.talks = adapter.talks()
+    if adapter.talks? then return adapter.talks()
     @data.talks
 
   # Public: Get an Array of Domain objects stored in the brain.
@@ -167,7 +173,7 @@ class Brain extends EventEmitter
   # Returns an Array of Domain objects.
   domains: ->
     adapter = @robot.adapter
-    if adapter.domains? then @data.domains = adapter.domains()
+    if adapter.domains? then return adapter.domains()
     @data.domains
 
 # Private: Extend obj with objects passed as additional args.

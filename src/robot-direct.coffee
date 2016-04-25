@@ -51,7 +51,7 @@ jsonMatcher = (prop, options, callback) ->
       return [regex, options, cb]
 
     checker = (obj) ->
-      false unless obj?
+      return false unless obj?
       switch prop
         when "stamp"  then obj.stamp_set? && obj.stamp_index?
         when "yesno"  then obj.question? && not obj.options?
@@ -61,7 +61,7 @@ jsonMatcher = (prop, options, callback) ->
         else obj[prop]?
 
     regex = /({.*})/
-    cb = (msg) -> callback msg if checker(msg.json = JSON.parse msg.match[1])
+    cb = (msg) -> callback msg if checker(msg.json = try JSON.parse msg.match[1] catch e then null)
     return [regex, options, cb]
 
 module.exports =

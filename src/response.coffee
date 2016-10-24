@@ -104,11 +104,13 @@ class Response
                                        runAdapterSend,
                                        responseMiddlewareDone
 
-  # Public: Leave myself from the room
+  # Public: Leave myself or an user from the room
+  #
+  # user: An User (optional). If the user is null, leave myself.
   #
   # Returns nothing
-  leave: () ->
-    @robot.adapter.leave @envelope
+  leave: (user) ->
+    @robot.adapter.leave @envelope, user
 
   # Public: Picks a random item from the given items.
   #

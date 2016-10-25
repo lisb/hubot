@@ -104,7 +104,8 @@ class Brain extends EventEmitter
   # Returns an Array of User objects.
   users: ->
     adapter = @robot.adapter
-    if adapter.users? then return adapter.users()
+    delegateToMe = require('./adapter').prototype.users
+    if adapter.users isnt delegateToMe then return adapter.users()
     @data.users
 
   # Public: Get a User object given a unique identifier.

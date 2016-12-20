@@ -5,10 +5,10 @@ GOOGLE_SHORTENER_API_KEY="AIzaSyAUisTOqBoSigbgtdZDIH-2PYHpzSRYmoQ"
 
 _map = (msg, callback) ->
   text = msg.match[1].replace(/[\n\r]/g, " ")
-  m = text.match(/^今ココ[:：] (.*) (https?:\/\/.*)$/)
+  m = text.match(/^(今ココ|I'm here)[:：] (.*) (https?:\/\/.*)$/)
   if m?
-    place = m[1].replace(/\ ?\(近辺\)$/, "").replace(/^緯度 [:：].*$/, "")
-    url = m[2]
+    place = m[2].replace(/\ ?\((近辺|Near)\)$/, "").replace(/^(緯度|LAT) [:：].*$/, "")
+    url = m[3]
 
     cb = (url) ->
       loc = url.match(/[@=]([0-9.]+),([0-9.]+)/) or ["", "", ""]
@@ -66,4 +66,3 @@ jsonMatcher = (prop, options, callback) ->
 
 module.exports =
   jsonMatcher:jsonMatcher
-

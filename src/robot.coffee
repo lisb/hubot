@@ -189,10 +189,10 @@ class Robot
   # callback - A Function that is called with a Response object.
   #
   # Returns nothing.
-  join: (callback) ->
-    @listeners.push new Listener(
-      @,
-      ((msg) -> msg instanceof JoinMessage),
+  join: (options, callback) ->
+    @listen(
+      ((msg) -> msg instanceof JoinMessage)
+      options
       callback
     )
 

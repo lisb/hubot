@@ -1,0 +1,89 @@
+'use strict'
+
+//
+// robot.coffee に対する拡張部分
+//
+const GOOGLE_SHORTENER_API_KEY = 'AIzaSyAUisTOqBoSigbgtdZDIH-2PYHpzSRYmoQ'
+
+const _map = (msg, callback) => {
+  const text = msg.match[1].replace(/[\n\r]/g, ' ')
+  const m = text.match(/^(今ココ|I'm here)[:：] (.*) (https?:\/\/.*)$/)
+  if (!m) return
+
+  const place = m[2].replace(/ ?\((近辺|Near)\)$/, '').replace(/^(緯度|LAT) [:：].*$/, '')
+  const url = m[3]
+
+  const cb = (err, url) => {
+    if (err) console.error(err)
+    if (typeof url !== 'string') url = ''
+
+    const loc = url.match(/[@=]([0-9.]+),([0-9.]+)/) || ['', '', '']
+    msg.json = { place, lat: loc[1], lng: loc[2] }
+    return callback(msg)
+  }
+
+  if (url.indexOf('goo.gl') === -1) {
+    return cb(null, url)
+  }
+
+  const get = msg.http(`https://www.googleapis.com/urlshortener/v1/url?shortUrl=${url}&key=${GOOGLE_SHORTENER_API_KEY}`).get()
+  get((err, res, body) => {
+    if (err) return cb(err)
+    try {
+      const json = JSON.parse(body)
+      return cb(json.longUrl, json)
+    } catch (e) {
+      return cb(e)
+    }
+  })
+}
+
+// public:
+const jsonMatcher = (prop, options, callback) => {
+  if (!callback) {
+    callback = options
+    options = {}
+  }
+
+  if (prop === 'map') {
+    const regex = /((.|[\n\r])*)/
+    const cb = (msg) => _map(msg, callback)
+    return [regex, options, cb]
+  }
+
+  const checker = (obj) => {
+    if (!obj) return false
+    switch (prop) {
+      case 'stamp':
+        return !!obj.stamp_set && !!obj.stamp_index
+      case 'yesno':
+        return !!obj.question && !obj.options
+      case 'select':
+        return !!obj.question && !!obj.options
+      case 'task':
+        return !!obj.title
+      case 'file':
+        return !!obj.file_id
+      default:
+        return !!obj[prop]
+    }
+  }
+
+  const regex = /({.*})/
+  const cb = (msg) => {
+    try {
+      const json = JSON.parse(msg.match[1])
+      if (checker(json)) {
+        msg.json = json
+        callback(msg)
+      }
+    } catch (e) {
+      return false
+    }
+  }
+  return [regex, options, cb]
+}
+
+module.exports = {
+  jsonMatcher
+}

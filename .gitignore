@@ -2,3 +2,6 @@ node_modules
 .hubot_history
 .node-version
 /test-types/**/*.js
+.nyc_output/
+npm-debug.log
+coverage/

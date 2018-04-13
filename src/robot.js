@@ -622,7 +622,7 @@ class Robot {
   announce (domain/* , ...strings */) {
     const strings = [].slice.call(arguments, 1)
 
-    this.adapter.announce.apply(this, [domain].concat(strings))
+    this.adapter.announce.apply(this.adapter, [domain].concat(strings))
   }
 
   // Public: A helper send function to message a room that the robot is in.

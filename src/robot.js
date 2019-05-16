@@ -26,6 +26,7 @@ class Robot {
   // adapter     - A String of the adapter name.
   // httpd       - A Boolean whether to enable the HTTP daemon.
   // name        - A String of the robot name, defaults to Hubot.
+  // alias       - A String of the alias of the robot name
   constructor (adapterPath, adapter, httpd, name, alias) {
     if (name == null) {
       name = 'Hubot'
@@ -40,6 +41,7 @@ class Robot {
     this.brain = new Brain(this)
     this.alias = alias
     this.adapter = null
+    this.datastore = null
     this.Response = Response
     this.commands = []
     this.listeners = []
@@ -459,7 +461,7 @@ class Robot {
     app.use(express.query())
 
     app.use(express.json())
-    app.use(express.urlencoded({ limit, parameterLimit: paramLimit }))
+    app.use(express.urlencoded({ limit, parameterLimit: paramLimit, extended: true }))
     // replacement for deprecated express.multipart/connect.multipart
     // limit to 100mb, as per the old behavior
     app.use(multipart({ maxFilesSize: 100 * 1024 * 1024 }))

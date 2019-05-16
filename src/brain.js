@@ -4,6 +4,33 @@ const EventEmitter = require('events').EventEmitter
 
 const User = require('./user')
 
+// If necessary, reconstructs a User object. Returns either:
+//
+// 1. If the original object was falsy, null
+// 2. If the original object was a User object, the original object
+// 3. If the original object was a plain JavaScript object, return
+//    a User object with all of the original object's properties.
+let reconstructUserIfNecessary = function (user, robot) {
+  if (!user) {
+    return null
+  }
+
+  if (!user.constructor || (user.constructor && user.constructor.name !== 'User')) {
+    let id = user.id
+    delete user.id
+    // Use the old user as the "options" object,
+    // populating the new user with its values.
+    // Also add the `robot` field so it gets a reference.
+    user.robot = robot
+    let newUser = new User(id, user)
+    delete user.robot
+
+    return newUser
+  } else {
+    return user
+  }
+}
+
 class Brain extends EventEmitter {
   // Represents somewhat persistent storage for the robot. Extend this.
   //
@@ -16,6 +43,9 @@ class Brain extends EventEmitter {
       talks: {},
       domains: {},
       _private: {}
+    }
+    this.getRobot = function () {
+      return robot
     }
 
     this.autoSave = true
@@ -148,6 +178,10 @@ class Brain extends EventEmitter {
   userForId (id, options) {
     const users = this.users()
     let user = users[id]
+    if (!options) {
+      options = {}
+    }
+    options.robot = this.getRobot()
 
     if (!user) {
       user = new User(id, options)
@@ -158,6 +192,7 @@ class Brain extends EventEmitter {
       user = new User(id, options)
       users[id] = user
     }
+    delete options.robot
 
     return user
   }

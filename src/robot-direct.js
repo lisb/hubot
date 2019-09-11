@@ -3,7 +3,6 @@
 //
 // robot.coffee に対する拡張部分
 //
-const GOOGLE_SHORTENER_API_KEY = 'AIzaSyAUisTOqBoSigbgtdZDIH-2PYHpzSRYmoQ'
 
 const _map = (msg, callback) => {
   const text = msg.match[1].replace(/[\n\r]/g, ' ')
@@ -22,20 +21,7 @@ const _map = (msg, callback) => {
     return callback(msg)
   }
 
-  if (url.indexOf('goo.gl') === -1) {
-    return cb(null, url)
-  }
-
-  const get = msg.http(`https://www.googleapis.com/urlshortener/v1/url?shortUrl=${url}&key=${GOOGLE_SHORTENER_API_KEY}`).get()
-  get((err, res, body) => {
-    if (err) return cb(err)
-    try {
-      const json = JSON.parse(body)
-      return cb(json.longUrl, json)
-    } catch (e) {
-      return cb(e)
-    }
-  })
+  return cb(null, url)
 }
 
 // public:

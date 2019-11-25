@@ -207,7 +207,7 @@ class Brain extends EventEmitter {
     for (let k in users || {}) {
       const userName = users[k]['name']
       if (userName != null && userName.toString().toLowerCase() === lowerName) {
-        result = this.data.users[k]
+        result = users[k]
       }
     }
 

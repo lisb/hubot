@@ -1,6 +1,6 @@
 {
   "name": "lisb-hubot",
-  "version": "3.3.2",
+  "version": "3.3.3+forked.3.3.2",
   "author": "hubot",
   "keywords": [
     "github",
@@ -38,7 +38,6 @@
     "sinon": "~1.17.0",
     "sinon-chai": "^2.8.0",
     "standard": "^10.0.2",
-    "semantic-release": "^6.3.6",
     "typescript": "^2.5.3"
   },
   "engines": {

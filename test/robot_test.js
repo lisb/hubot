@@ -469,6 +469,18 @@ describe('Robot', function () {
       })
     })
 
+    describe.only('#setTopic', function () {
+      this.beforeEach(function () {
+        sinon.spy(this.robot.adapter, 'topic')
+      })
+
+      it('delegates to adapter "topic" with proper context', function () {
+        this.robot.setTopic({room: '12345'}, 'test title')
+        expect(this.robot.adapter.topic).to.have.been.calledOn(this.robot.adapter)
+        expect(this.robot.adapter.topic).to.have.been.calledWith({room: '12345'}, 'test title')
+      })
+    })
+
     describe('#on', function () {
       beforeEach(function () {
         sinon.spy(this.robot.events, 'on')

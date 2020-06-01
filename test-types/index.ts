@@ -26,6 +26,7 @@ exports = (robot: Robot) => {
     res.send({close_task: "task message id"});
     res.send({path: "/path/to/file", name: "添付ファイル", type: "text/plain", text: "先ほどの議事録です"});
     res.send({path: ["/path/to/image1", "/path/to/image2"], type: ["image/png", "image/png"]});
+    res.topic(`test`);
   });
 
   robot.respond(/text (.*)/i, res => {
@@ -159,4 +160,6 @@ exports = (robot: Robot) => {
   robot.respond(/announce (.*)/, res => {
     res.announce(res.match[1]);
   });
+
+  robot.setTopic({room:`12345`}, "test");
 }

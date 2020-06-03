@@ -640,7 +640,7 @@ class Robot {
     this.adapter.send.apply(this.adapter, [envelope].concat(strings))
   }
 
-  // Public: A helper send topic message to a room that the robot is in.
+  // Public: A helper send topic changing message to a room that the robot is in.
   //
   // room     - String designating the room to message.
   // strings  - room topic.

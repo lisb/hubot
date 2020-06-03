@@ -469,13 +469,13 @@ describe('Robot', function () {
       })
     })
 
-    describe.only('#setTopic', function () {
+    describe('#roomTopic', function () {
       this.beforeEach(function () {
         sinon.spy(this.robot.adapter, 'topic')
       })
 
       it('delegates to adapter "topic" with proper context', function () {
-        this.robot.setTopic({room: '12345'}, 'test title')
+        this.robot.roomTopic({room: '12345'}, 'test title')
         expect(this.robot.adapter.topic).to.have.been.calledOn(this.robot.adapter)
         expect(this.robot.adapter.topic).to.have.been.calledWith({room: '12345'}, 'test title')
       })

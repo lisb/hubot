@@ -646,7 +646,7 @@ class Robot {
   // strings  - room topic.
   //
   // Returns nothing.
-  setTopic (room/* , ...strings */) {
+  roomTopic (room/* , ...strings */) {
     const strings = [].slice.call(arguments, 1)
 
     this.adapter.topic.apply(this.adapter, [room].concat(strings))

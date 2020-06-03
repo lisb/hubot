@@ -161,5 +161,5 @@ exports = (robot: Robot) => {
     res.announce(res.match[1]);
   });
 
-  robot.setTopic({room:`12345`}, "test");
+  robot.roomTopic({room:`12345`}, "test");
 }

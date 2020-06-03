@@ -39,7 +39,7 @@ export interface Robot {
   reply(envelope: {room: string, user: User}, ...contents: SendableContent[]): void;
   announce(domain: {id: string}, ...contents: string[]): void;
 
-  setTopic(envelope: {room: string}, ...contents: string[]): void;
+  roomTopic(envelope: {room: string}, ...contents: string[]): void;
 
   http(url: string, options: object): HttpClient;
 }

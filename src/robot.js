@@ -640,6 +640,18 @@ class Robot {
     this.adapter.send.apply(this.adapter, [envelope].concat(strings))
   }
 
+  // Public: A helper send topic changing message to a room that the robot is in.
+  //
+  // room     - String designating the room to message.
+  // strings  - room topic.
+  //
+  // Returns nothing.
+  roomTopic (room/* , ...strings */) {
+    const strings = [].slice.call(arguments, 1)
+
+    this.adapter.topic.apply(this.adapter, [room].concat(strings))
+  }
+
   // Public: A wrapper around the EventEmitter API to make usage
   // semantically better.
   //

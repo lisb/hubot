@@ -15,6 +15,7 @@ export interface Response<M extends Message> {
   download(file: RemoteFile, callback: (path: string) => void): void;
   announce(...content: string[]): void;
   leave(user?: {id: string}): void;
+  topic(...content: string[]): void;
   http(url: string, options: object): HttpClient;
 }
 
@@ -27,7 +28,7 @@ export interface ResponseWithJson<T extends JsonContent> extends Response<TextMe
 export type SelectResponse = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export declare enum TaskClosingType { Any = 0, All = 1 }
 
-export type SendableContent = 
+export type SendableContent =
     string
   | Text
   | Text   & SendTextHandler

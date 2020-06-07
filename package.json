@@ -15,7 +15,6 @@
     "url": "https://github.com/lisb/hubot.git"
   },
   "dependencies": {
-    "hubot-direct": "^1.0.0",
     "async": ">=0.1.0 <1.0.0",
     "chalk": "^1.0.0",
     "cline": "^0.8.2",

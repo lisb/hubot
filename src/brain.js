@@ -168,7 +168,8 @@ class Brain extends EventEmitter {
   //
   // Returns a User instance of the specified user.
   userForId (id, options) {
-    let user = this.data.users[id]
+    const users = this.users();
+    let user = users[id]
     if (!options) {
       options = {}
     }
@@ -176,12 +177,12 @@ class Brain extends EventEmitter {
 
     if (!user) {
       user = new User(id, options)
-      this.data.users[id] = user
+      users[id] = user
     }
 
     if (options && options.room && (!user.room || user.room !== options.room)) {
       user = new User(id, options)
-      this.data.users[id] = user
+      users[id] = user
     }
     delete options.robot
 
@@ -195,10 +196,11 @@ class Brain extends EventEmitter {
     let result = null
     const lowerName = name.toLowerCase()
 
-    for (let k in this.data.users || {}) {
-      const userName = this.data.users[k]['name']
+    const users = this.users();
+    for (let k in users || {}) {
+      const userName = users[k]['name']
       if (userName != null && userName.toString().toLowerCase() === lowerName) {
-        result = this.data.users[k]
+        result = users[k]
       }
     }
 
@@ -213,7 +215,7 @@ class Brain extends EventEmitter {
   usersForRawFuzzyName (fuzzyName) {
     const lowerFuzzyName = fuzzyName.toLowerCase()
 
-    const users = this.data.users || {}
+    const users = this.users() || {}
 
     return Object.keys(users).reduce((result, key) => {
       const user = users[key]

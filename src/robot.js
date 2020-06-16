@@ -13,7 +13,6 @@ const Response = require('./response')
 const Listener = require('./listener')
 const Message = require('./message')
 const Middleware = require('./middleware')
-const direct = require('./robot-direct')
 
 const HUBOT_DEFAULT_ADAPTERS = ['campfire', 'shell']
 const HUBOT_DOCUMENTATION_SECTIONS = ['description', 'dependencies', 'configuration', 'commands', 'notes', 'author', 'authors', 'examples', 'tags', 'urls']
@@ -101,9 +100,6 @@ class Robot {
   //
   // Returns nothing.
   hear (regex, options, callback) {
-    if (typeof regex === 'string') {
-      [regex, options, callback] = direct.jsonMatcher(regex, options, callback)
-    }
     this.listeners.push(new Listener.TextListener(this, regex, options, callback))
   }
 
@@ -118,9 +114,6 @@ class Robot {
   //
   // Returns nothing.
   respond (regex, options, callback) {
-    if (typeof regex === 'string') {
-      [regex, options, callback] = direct.jsonMatcher(regex, options, callback)
-    }
     this.hear(this.respondPattern(regex), options, callback)
   }
 
@@ -178,15 +171,6 @@ class Robot {
   // Returns nothing.
   leave (options, callback) {
     this.listen(msg => msg instanceof Message.LeaveMessage, options, callback)
-  }
-
-  // Public: Adds a Listener that triggers when I enter the room.
-  //
-  // callback - A Function that is called with a Response object.
-  //
-  // Returns nothing.
-  join (options, callback) {
-    this.listen(msg => msg instanceof Message.JoinMessage, options, callback)
   }
 
   // Public: Adds a Listener that triggers when anyone changes the topic.
@@ -450,8 +434,7 @@ class Robot {
     const app = express()
 
     app.use((req, res, next) => {
-      const encodedName = encodeURIComponent(this.name)
-      res.setHeader('X-Powered-By', `hubot/${encodedName}`)
+      res.setHeader('X-Powered-By', `hubot/${this.name}`)
       return next()
     })
 
@@ -614,19 +597,6 @@ class Robot {
     this.adapter.reply.apply(this.adapter, [envelope].concat(strings))
   }
 
-  // Public: A helper posts a message back to the public source
-  //
-  // domain  - A domain instance.
-  // strings - One or more strings to be posted. The order of these strings
-  //           should be kept intact.
-  //
-  // Returns nothing.
-  announce (domain/* , ...strings */) {
-    const strings = [].slice.call(arguments, 1)
-
-    this.adapter.announce.apply(this.adapter, [domain].concat(strings))
-  }
-
   // Public: A helper send function to message a room that the robot is in.
   //
   // room    - String designating the room to message.
@@ -638,18 +608,6 @@ class Robot {
     const envelope = { room }
 
     this.adapter.send.apply(this.adapter, [envelope].concat(strings))
-  }
-
-  // Public: A helper send topic changing message to a room that the robot is in.
-  //
-  // room     - String designating the room to message.
-  // strings  - room topic.
-  //
-  // Returns nothing.
-  roomTopic (room/* , ...strings */) {
-    const strings = [].slice.call(arguments, 1)
-
-    this.adapter.topic.apply(this.adapter, [room].concat(strings))
   }
 
   // Public: A wrapper around the EventEmitter API to make usage

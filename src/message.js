@@ -8,12 +8,6 @@ class Message {
     this.user = user
     this.done = done || false
     this.room = this.user.room
-    this.rooms = this.user.rooms
-
-    const r = (this.rooms && this.rooms[this.room]) || {}
-    this.roomType = r.type
-    this.roomTopic = r.topic
-    this.roomUsers = r.users
   }
 
   // Indicates that no other Listener should be called on this object
@@ -67,13 +61,6 @@ class EnterMessage extends Message {}
 // id   - A String of the message ID.
 class LeaveMessage extends Message {}
 
-// Represents an incoming myself entrance notification.
-//
-// user - A User instance for myself.
-// text - Always null.
-// id   - Always null.
-class JoinMessage extends Message {}
-
 // Represents an incoming topic change notification.
 //
 // user - A User instance for the user who changed the topic.
@@ -96,7 +83,6 @@ module.exports = {
   TextMessage,
   EnterMessage,
   LeaveMessage,
-  JoinMessage,
   TopicMessage,
   CatchAllMessage
 }

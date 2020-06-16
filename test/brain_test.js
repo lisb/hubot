@@ -279,18 +279,6 @@ describe('Brain', function () {
         expect(result).to.be.empty
       })
     })
-
-    describe('#rooms', function () {
-      it('returns the empty value if mock robot', function () {
-        expect(this.brain.rooms()).to.deep.equal({})
-      })
-    })
-
-    describe('#domains', function () {
-      it('returns the empty value if mock robot', function () {
-        expect(this.brain.domains()).to.deep.equal({})
-      })
-    })
   })
 
   describe('Auto-Save', function () {

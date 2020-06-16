@@ -37,11 +37,8 @@ class Brain extends EventEmitter {
   // Returns a new Brain with no external storage.
   constructor (robot) {
     super()
-    this.robot = robot
     this.data = {
       users: {},
-      talks: {},
-      domains: {},
       _private: {}
     }
     this.getRobot = function () {
@@ -149,13 +146,13 @@ class Brain extends EventEmitter {
       this.data[k] = data[k]
     }
 
-    // for old daab versions.
-    ['users', 'talks', 'domains']
-    .filter(m => this.data[m] && Object.keys(this.data[m]).length > 0)
-    .forEach(m => {
-      console.warn(`Please use brain.${m}().`)
-      this.data[m] = {}
-    })
+    // Ensure users in the brain are still User objects.
+    if (data && data.users) {
+      for (let k in data.users) {
+        let user = this.data.users[k]
+        this.data.users[k] = reconstructUserIfNecessary(user, this.getRobot())
+      }
+    }
 
     this.emit('loaded', this.data)
   }
@@ -164,11 +161,6 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of User objects.
   users () {
-    const adapter = this.robot.adapter
-    const delegateToMe = require('./adapter').prototype.users
-    if (adapter && adapter.users !== delegateToMe) {
-      return adapter.users()
-    }
     return this.data.users
   }
 
@@ -176,8 +168,7 @@ class Brain extends EventEmitter {
   //
   // Returns a User instance of the specified user.
   userForId (id, options) {
-    const users = this.users()
-    let user = users[id]
+    let user = this.data.users[id]
     if (!options) {
       options = {}
     }
@@ -185,12 +176,12 @@ class Brain extends EventEmitter {
 
     if (!user) {
       user = new User(id, options)
-      users[id] = user
+      this.data.users[id] = user
     }
 
     if (options && options.room && (!user.room || user.room !== options.room)) {
       user = new User(id, options)
-      users[id] = user
+      this.data.users[id] = user
     }
     delete options.robot
 
@@ -203,11 +194,11 @@ class Brain extends EventEmitter {
   userForName (name) {
     let result = null
     const lowerName = name.toLowerCase()
-    const users = this.users()
-    for (let k in users || {}) {
-      const userName = users[k]['name']
+
+    for (let k in this.data.users || {}) {
+      const userName = this.data.users[k]['name']
       if (userName != null && userName.toString().toLowerCase() === lowerName) {
-        result = users[k]
+        result = this.data.users[k]
       }
     }
 
@@ -222,7 +213,7 @@ class Brain extends EventEmitter {
   usersForRawFuzzyName (fuzzyName) {
     const lowerFuzzyName = fuzzyName.toLowerCase()
 
-    const users = this.users() || {}
+    const users = this.data.users || {}
 
     return Object.keys(users).reduce((result, key) => {
       const user = users[key]
@@ -244,24 +235,6 @@ class Brain extends EventEmitter {
     const fuzzyMatchedUsers = matchedUsers.filter(user => user.name.toLowerCase() === lowerFuzzyName)
 
     return fuzzyMatchedUsers.length > 0 ? fuzzyMatchedUsers : matchedUsers
-  }
-
-  // Public: Get an Array of Talk objects stored in the brain.
-  //
-  // Returns an Array of Talk objects.
-  rooms () {
-    const adapter = this.robot.adapter
-    if (adapter && typeof adapter.talks === 'function') return adapter.talks()
-    return this.data.talks
-  }
-
-  // Public: Get an Array of Domain objects stored in the brain.
-  //
-  // Returns an Array of Domain objects.
-  domains () {
-    const adapter = this.robot.adapter
-    if (adapter && typeof adapter.domains === 'function') return adapter.domains()
-    return this.data.domains
   }
 }
 

@@ -434,7 +434,8 @@ class Robot {
     const app = express()
 
     app.use((req, res, next) => {
-      res.setHeader('X-Powered-By', `hubot/${this.name}`)
+      const encodedName = encodeURIComponent(this.name)
+      res.setHeader('X-Powered-By', `hubot/${encodedName}`)
       return next()
     })
 

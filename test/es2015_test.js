@@ -25,7 +25,6 @@ const TextMessage = Hubot.TextMessage
 const EnterMessage = Hubot.EnterMessage
 const LeaveMessage = Hubot.LeaveMessage
 const TopicMessage = Hubot.TopicMessage
-const JoinMessage = Hubot.JoinMessage
 const CatchAllMessage = Hubot.CatchAllMessage
 const loadBot = Hubot.loadBot
 
@@ -173,17 +172,6 @@ describe('hubot/es2015', function () {
 
     expect(topicMessage).to.be.an.instanceof(TopicMessage)
     expect(topicMessage).to.be.an.instanceof(Message)
-  })
-
-  it('exports JoinMessage class', function () {
-    class MyJoinMessage extends JoinMessage {}
-    const userMock = {
-      room: 'room'
-    }
-    const joinMessage = new MyJoinMessage(userMock)
-
-    expect(joinMessage).to.be.an.instanceof(JoinMessage)
-    expect(joinMessage).to.be.an.instanceof(Message)
   })
 
   it('exports CatchAllMessage class', function () {

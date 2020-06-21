@@ -52,17 +52,6 @@ class Response {
     this.runWithMiddleware.apply(this, ['reply', { plaintext: true }].concat(strings))
   }
 
-  // Public: Posts a message back to the public source
-  //
-  // strings - One or more strings to be posted. The order of these strings
-  //           should be kept intact.
-  //
-  // Returns nothing.
-  announce (/* ...strings */) {
-    const strings = [].slice.call(arguments)
-    this.runWithMiddleware.apply(this, ['announce', { plaintext: true }].concat(strings))
-  }
-
   // Public: Posts a topic changing message
   //
   // strings - One or more strings to set as the topic of the
@@ -129,26 +118,6 @@ class Response {
     }
 
     return this.robot.middleware.response.execute(context, runAdapterSend, responseMiddlewareDone)
-  }
-
-  // Public: Download contents from the URL and save to a file.
-  //
-  // remoteFile - Strings to be url or Object to be file parameters.
-  //
-  // callback - Call with file path when downloading is finished.
-  //
-  // Returns nothing.
-  download (remoteFile, callback) {
-    this.robot.adapter.download(this.envelope, remoteFile, callback)
-  }
-
-  // Public: Leave myself or an user from the room
-  //
-  // user: An User (optional). If the user is null, leave myself.
-  //
-  // Returns nothing
-  leave (user) {
-    this.robot.adapter.leave(this.envelope, user)
   }
 
   // Public: Picks a random item from the given items.

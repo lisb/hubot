@@ -21,7 +21,6 @@ module.exports = {
   TextMessage: Message.TextMessage,
   EnterMessage: Message.EnterMessage,
   LeaveMessage: Message.LeaveMessage,
-  JoinMessage: Message.JoinMessage,
   TopicMessage: Message.TopicMessage,
   CatchAllMessage: Message.CatchAllMessage,
   DataStore: DataStore.DataStore,

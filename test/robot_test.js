@@ -17,7 +17,6 @@ const EnterMessage = require('../src/message').EnterMessage
 const LeaveMessage = require('../src/message').LeaveMessage
 const TextMessage = require('../src/message').TextMessage
 const TopicMessage = require('../src/message').TopicMessage
-const JoinMessage = require('../src/message').JoinMessage
 
 // mock `hubot-mock-adapter` module from fixture
 const mockery = require('mockery')
@@ -469,18 +468,6 @@ describe('Robot', function () {
       })
     })
 
-    describe('#roomTopic', function () {
-      this.beforeEach(function () {
-        sinon.spy(this.robot.adapter, 'topic')
-      })
-
-      it('delegates to adapter "topic" with proper context', function () {
-        this.robot.roomTopic({room: '12345'}, 'test title')
-        expect(this.robot.adapter.topic).to.have.been.calledOn(this.robot.adapter)
-        expect(this.robot.adapter.topic).to.have.been.calledWith({room: '12345'}, 'test title')
-      })
-    })
-
     describe('#on', function () {
       beforeEach(function () {
         sinon.spy(this.robot.events, 'on')
@@ -637,30 +624,6 @@ describe('Robot', function () {
         const testMessage = new TextMessage(this.user, 'message123')
 
         this.robot.topic(callback)
-        const testListener = this.robot.listeners[0]
-        const result = testListener.matcher(testMessage)
-
-        expect(result).to.not.be.ok
-      })
-    })
-
-    describe('#join', function () {
-      it('matches JoinMessages', function () {
-        const callback = sinon.spy()
-        const testMessage = new JoinMessage(this.user)
-
-        this.robot.join(callback)
-        const testListener = this.robot.listeners[0]
-        const result = testListener.matcher(testMessage)
-
-        expect(result).to.be.ok
-      })
-
-      it('does not match TextMessages', function () {
-        const callback = sinon.spy()
-        const testMessage = new TextMessage(this.user, 'message123')
-
-        this.robot.join(callback)
         const testListener = this.robot.listeners[0]
         const result = testListener.matcher(testMessage)
 

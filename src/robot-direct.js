@@ -50,6 +50,12 @@ const jsonMatcher = (prop, options, callback) => {
         return !!obj.title
       case 'file':
         return !!obj.file_id
+      case 'note_created':
+        return !!obj.note_id && !!obj.revision && obj.revision === 1
+      case 'note_updated':
+        return !!obj.note_id && !!obj.revision && obj.revision > 1
+      case 'note_deleted':
+        return !!obj.note_id && obj.revision == null
       default:
         return !!obj[prop]
     }

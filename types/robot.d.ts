@@ -3,13 +3,13 @@
 import { Brain } from "./brain";
 import { HttpClient } from "./http";
 import { User, Message, MessageId, TextMessage, EnterMessage, LeaveMessage, JoinMessage, TopicMessage, CatchAllMessage } from "./message";
-import { Response, ResponseWithJson, Stamp, YesNoWithResponse, SelectWithResponse, TaskWithResponse, RemoteFile, RemoteFiles, ActualLocation, SendableContent, JsonContent } from "./response";
+import { Response, ResponseWithJson, Stamp, YesNoWithResponse, SelectWithResponse, TaskWithResponse, RemoteFile, RemoteFiles, ActualLocation, SendableContent, JsonContent, NoteCreated, NoteUpdated, NoteDeleted } from "./response";
 
 export type Matcher = (msg: Message) => boolean;
 export type Callback<M extends Message> = (res: Response<M>) => void;
 export type ErrorHandler = (err: Error, res: object) => void;
 
-export type RespondType = "stamp" | "yesno" | "select" | "task" | "file" | "files" | "map";
+export type RespondType = "stamp" | "yesno" | "select" | "task" | "file" | "files" | "map" | "note_created" | "note_updated" | "note_deleted";
 export type TypedJsonCallback<T extends RespondType, J extends JsonContent> = (res: ResponseWithJson<J>) => void;
 
 export interface Robot {
@@ -27,6 +27,9 @@ export interface Robot {
   respond(type: "file", callback: TypedJsonCallback<"file", RemoteFile>): void;
   respond(type: "files", callback: TypedJsonCallback<"files", RemoteFiles>): void;
   respond(type: "map", callback: TypedJsonCallback<"map", ActualLocation>): void;
+  respond(type: "note_created", callback: TypedJsonCallback<"note_created", NoteCreated>): void;
+  respond(type: "note_updated", callback: TypedJsonCallback<"note_updated", NoteUpdated>): void;
+  respond(type: "note_deleted", callback: TypedJsonCallback<"note_deleted", NoteDeleted>): void;
 
   enter(callback: Callback<EnterMessage>): void;
   leave(callback: Callback<LeaveMessage>): void;

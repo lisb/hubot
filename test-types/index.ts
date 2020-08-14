@@ -7,7 +7,7 @@ import {
   YesNo, SentYesNo,
   Text, SentText,
   TaskClosingType,
-  ResponseWithJson, RemoteFile, RemoteFiles,
+  ResponseWithJson, RemoteFile, RemoteFiles, Note, SentNote,
 } from "../types";
 
 exports = (robot: Robot) => {
@@ -26,6 +26,8 @@ exports = (robot: Robot) => {
     res.send({close_task: "task message id"});
     res.send({path: "/path/to/file", name: "添付ファイル", type: "text/plain", text: "先ほどの議事録です"});
     res.send({path: ["/path/to/image1", "/path/to/image2"], type: ["image/png", "image/png"]});
+    res.send({note_title: "title", note_content: "content"});
+    res.send({note_title: "title", note_content: "consent", note_attachments: [{path: "/path/to/local-file"}]});
     res.topic(`test`);
   });
 
@@ -104,6 +106,33 @@ exports = (robot: Robot) => {
     res.json.place;
     res.json.lat;
     res.json.lng;
+  });
+
+  robot.respond(/create note$/i, res => {
+    const c: Note & OnSend<SentNote> = {
+      note_title: "タイトル",
+      note_content: "本文",
+      onsend: sent => {
+        sent.note.id;
+      }
+    };
+    res.send(c);
+  });
+  robot.respond("note_created", res => {
+    res.json.note_id;
+    res.json.title;
+    res.json.revision;
+    res.json.has_attachments;
+  });
+  robot.respond("note_updated", res => {
+    res.json.note_id;
+    res.json.title;
+    res.json.revision;
+    res.json.has_attachments;
+  });
+  robot.respond("note_deleted", res => {
+    res.json.note_id;
+    res.json.title;
   });
 
   robot.respond(/yesno answers/i, res => {

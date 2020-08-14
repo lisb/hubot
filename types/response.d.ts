@@ -40,6 +40,8 @@ export type SendableContent =
   | Select & SendSelectHandler
   | Task
   | Task   & SendTaskHandler
+  | Note
+  | Note   & SendNoteHandler
   | CloseYesNo | CloseSelect | CloseTask
   | AttachmentFile | AttachmentFiles
   | ReplyResponse<boolean> | ReplyResponse<SelectResponse> | ReplyTask
@@ -53,6 +55,7 @@ export type Select       = {question: string, options: string[]};
 export type CloseSelect  = {close_select: MessageId};
 export type Task         = {title: string, closing_type: TaskClosingType};
 export type CloseTask    = {close_task: MessageId};
+export type Note         = {note_title: string, note_content: string, note_attachments?: AttachmentFile[]};
 
 export type AttachmentFile = {
   path:  string;
@@ -74,6 +77,18 @@ export type SentStamp  = Sent<Stamp>;
 export type SentYesNo  = SentAction<YesNoAnswer, YesNo>;
 export type SentSelect = SentAction<SelectAnswer, Select>;
 export type SentTask   = SentAction<TaskAnswer, Task>;
+export type SentNote   = {
+  note: {
+    id: string;
+    noteRevision: {
+      revision: number;
+      title: string;
+      contentType: number;
+      contentText: string;
+      contentFiles?: RemoteFile[];
+    }
+  }
+};
 
 type YesNoAnswer  = (trues: DirectUser[], falses: DirectUser[]) => void;
 type SelectAnswer = (options: Array<DirectUser[]>) => void;
@@ -84,6 +99,7 @@ type SendStampHandler  = OnSend<SentStamp>  | WithOnReadStatusHandler<SentStamp>
 type SendYesNoHandler  = OnSend<SentYesNo>  | WithOnReadStatusHandler<SentYesNo>  | WithReadStatusProperties<SentYesNo>;
 type SendSelectHandler = OnSend<SentSelect> | WithOnReadStatusHandler<SentSelect> | WithReadStatusProperties<SentSelect>;
 type SendTaskHandler   = OnSend<SentTask>   | WithOnReadStatusHandler<SentTask>   | WithReadStatusProperties<SentTask>;
+type SendNoteHandler   = OnSend<SentNote>;
 
 export type WithOnReadStatusHandler<S> =
   OnRead<(readNowUsers: DirectUser[], readUsers: DirectUser[], unreadUsers: DirectUser[]) => void> &
@@ -104,6 +120,7 @@ export type JsonContent =
   | YesNoWithResponse | SelectWithResponse | TaskWithResponse
   | RemoteFile | RemoteFiles
   | ActualLocation
+  | NoteCreated | NoteUpdated | NoteDeleted
   ;
 
 export type YesNoWithResponse  = YesNo & {response?: boolean};
@@ -111,9 +128,11 @@ export type SelectWithResponse = Select & {response?: SelectResponse};
 export type TaskWithResponse   = Task & {done?: boolean}
 
 export type RemoteFile = {
+  id: string;
   name: string;
   content_type: string;
   content_size: number;
+  url: string;
 };
 export type RemoteFiles = {
   files: RemoteFile[];
@@ -124,4 +143,23 @@ export type ActualLocation = {
   place: string;
   lat: number;
   lng: number;
+};
+
+export type NoteCreated = {
+  note_id: string;
+  title: string;
+  revision: number;
+  has_attachments?: boolean;
+};
+
+export type NoteUpdated = {
+  note_id: string;
+  title: string;
+  revision: number;
+  has_attachments?: boolean;
+};
+
+export type NoteDeleted = {
+  note_id: string;
+  title: string;
 };

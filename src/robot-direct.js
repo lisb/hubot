@@ -47,7 +47,7 @@ const jsonMatcher = (prop, options, callback) => {
       case 'select':
         return !!obj.question && !!obj.options
       case 'task':
-        return !!obj.title
+        return !!obj.title && !obj.note_id
       case 'file':
         return !!obj.file_id
       case 'note_created':

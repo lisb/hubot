@@ -61,12 +61,12 @@ describe('Brain', function () {
         expect(this.brain.emit).to.have.been.calledWith('loaded', this.brain.data)
       })
 
-      it('coerces loaded data into User objects', function () {
+      it('discards loaded data and creates new user object instead', function () {
         this.brain.mergeData({users: {'4': {'name': 'new', 'id': '4'}}})
         let user = this.brain.userForId('4')
         expect(user.constructor.name).to.equal('User')
         expect(user.id).to.equal('4')
-        expect(user.name).to.equal('new')
+        expect(user.name).to.equal('4')
         expect(isCircular(this.brain)).to.be.false
       })
     })

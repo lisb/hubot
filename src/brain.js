@@ -4,40 +4,12 @@ const EventEmitter = require('events').EventEmitter
 
 const User = require('./user')
 
-// If necessary, reconstructs a User object. Returns either:
-//
-// 1. If the original object was falsy, null
-// 2. If the original object was a User object, the original object
-// 3. If the original object was a plain JavaScript object, return
-//    a User object with all of the original object's properties.
-let reconstructUserIfNecessary = function (user, robot) {
-  if (!user) {
-    return null
-  }
-
-  if (!user.constructor || (user.constructor && user.constructor.name !== 'User')) {
-    let id = user.id
-    delete user.id
-    // Use the old user as the "options" object,
-    // populating the new user with its values.
-    // Also add the `robot` field so it gets a reference.
-    user.robot = robot
-    let newUser = new User(id, user)
-    delete user.robot
-
-    return newUser
-  } else {
-    return user
-  }
-}
-
 class Brain extends EventEmitter {
   // Represents somewhat persistent storage for the robot. Extend this.
   //
   // Returns a new Brain with no external storage.
   constructor (robot) {
     super()
-    this.robot = robot
     this.data = {
       users: {},
       talks: {},
@@ -164,7 +136,7 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of User objects.
   users () {
-    const adapter = this.robot.adapter
+    const adapter = this.getRobot().adapter
     const delegateToMe = require('./adapter').prototype.users
     if (adapter && adapter.users !== delegateToMe) {
       return adapter.users()
@@ -250,7 +222,7 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of Talk objects.
   rooms () {
-    const adapter = this.robot.adapter
+    const adapter = this.getRobot().adapter
     if (adapter && typeof adapter.talks === 'function') return adapter.talks()
     return this.data.talks
   }
@@ -259,7 +231,7 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of Domain objects.
   domains () {
-    const adapter = this.robot.adapter
+    const adapter = this.getRobot().adapter
     if (adapter && typeof adapter.domains === 'function') return adapter.domains()
     return this.data.domains
   }

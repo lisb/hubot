@@ -10,7 +10,6 @@ class Brain extends EventEmitter {
   // Returns a new Brain with no external storage.
   constructor (robot) {
     super()
-    this.robot = robot
     this.data = {
       users: {},
       talks: {},
@@ -137,7 +136,7 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of User objects.
   users () {
-    const adapter = this.robot.adapter
+    const adapter = this.getRobot().adapter
     const delegateToMe = require('./adapter').prototype.users
     if (adapter && adapter.users !== delegateToMe) {
       return adapter.users()
@@ -223,7 +222,7 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of Talk objects.
   rooms () {
-    const adapter = this.robot.adapter
+    const adapter = this.getRobot().adapter
     if (adapter && typeof adapter.talks === 'function') return adapter.talks()
     return this.data.talks
   }
@@ -232,7 +231,7 @@ class Brain extends EventEmitter {
   //
   // Returns an Array of Domain objects.
   domains () {
-    const adapter = this.robot.adapter
+    const adapter = this.getRobot().adapter
     if (adapter && typeof adapter.domains === 'function') return adapter.domains()
     return this.data.domains
   }

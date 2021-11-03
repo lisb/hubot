@@ -135,11 +135,11 @@ class Brain extends EventEmitter {
   // Public: Get an Array of User objects stored in the brain.
   //
   // Returns an Array of User objects.
-  users () {
+  users (domainId) {
     const adapter = this.getRobot().adapter
     const delegateToMe = require('./adapter').prototype.users
     if (adapter && adapter.users !== delegateToMe) {
-      return adapter.users()
+      return adapter.users(domainId)
     }
     return this.data.users
   }
@@ -148,7 +148,13 @@ class Brain extends EventEmitter {
   //
   // Returns a User instance of the specified user.
   userForId (id, options) {
-    const users = this.users()
+    let domainId
+    if (!options && typeof options === 'string') {
+      domainId = options
+      options = undefined
+    }
+
+    const users = this.users(domainId)
     let user = users[id]
     if (!options) {
       options = {}
@@ -172,10 +178,10 @@ class Brain extends EventEmitter {
   // Public: Get a User object given a name.
   //
   // Returns a User instance for the user with the specified name.
-  userForName (name) {
+  userForName (name, domainId) {
     let result = null
     const lowerName = name.toLowerCase()
-    const users = this.users()
+    const users = this.users(domainId)
     for (let k in users || {}) {
       const userName = users[k]['name']
       if (userName != null && userName.toString().toLowerCase() === lowerName) {
@@ -191,10 +197,10 @@ class Brain extends EventEmitter {
   // nicknames, etc.
   //
   // Returns an Array of User instances matching the fuzzy name.
-  usersForRawFuzzyName (fuzzyName) {
+  usersForRawFuzzyName (fuzzyName, domainId) {
     const lowerFuzzyName = fuzzyName.toLowerCase()
 
-    const users = this.users() || {}
+    const users = this.users(domainId) || {}
 
     return Object.keys(users).reduce((result, key) => {
       const user = users[key]
@@ -210,8 +216,8 @@ class Brain extends EventEmitter {
   // fuzzyName is a raw fuzzy match (see usersForRawFuzzyName).
   //
   // Returns an Array of User instances matching the fuzzy name.
-  usersForFuzzyName (fuzzyName) {
-    const matchedUsers = this.usersForRawFuzzyName(fuzzyName)
+  usersForFuzzyName (fuzzyName, domainId) {
+    const matchedUsers = this.usersForRawFuzzyName(fuzzyName, domainId)
     const lowerFuzzyName = fuzzyName.toLowerCase()
     const fuzzyMatchedUsers = matchedUsers.filter(user => user.name.toLowerCase() === lowerFuzzyName)
 

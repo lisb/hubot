@@ -20,8 +20,8 @@ describe('Brain', function () {
   beforeEach(function () {
     this.clock = sinon.useFakeTimers()
     this.mockRobot = {
-      emit () {},
-      on () {}
+      emit () { },
+      on () { }
     }
 
     // This *should* be callsArgAsync to match the 'on' API, but that makes
@@ -30,9 +30,9 @@ describe('Brain', function () {
 
     this.brain = new Brain(this.mockRobot)
 
-    this.user1 = this.brain.userForId('1', {name: 'Guy One'})
-    this.user2 = this.brain.userForId('2', {name: 'Guy One Two'})
-    this.user3 = this.brain.userForId('3', {name: 'Girl Three'})
+    this.user1 = this.brain.userForId('1', { name: 'Guy One' })
+    this.user2 = this.brain.userForId('2', { name: 'Guy One Two' })
+    this.user3 = this.brain.userForId('3', { name: 'Girl Three' })
   })
 
   afterEach(function () {
@@ -47,7 +47,7 @@ describe('Brain', function () {
           2: 'old'
         }
 
-        this.brain.mergeData({2: 'new'})
+        this.brain.mergeData({ 2: 'new' })
 
         expect(this.brain.data).to.deep.equal({
           1: 'old',
@@ -62,7 +62,7 @@ describe('Brain', function () {
       })
 
       it('discards loaded data and creates new user object instead', function () {
-        this.brain.mergeData({users: {'4': {'name': 'new', 'id': '4'}}})
+        this.brain.mergeData({ users: { '4': { 'name': 'new', 'id': '4' } } })
         let user = this.brain.userForId('4')
         expect(user.constructor.name).to.equal('User')
         expect(user.id).to.equal('4')
@@ -213,7 +213,7 @@ describe('Brain', function () {
         })
 
         it('passes the provided options to the new User', function () {
-          const newUser = this.brain.userForId('all-new-user', {name: 'All New User', prop: 'mine'})
+          const newUser = this.brain.userForId('all-new-user', { name: 'All New User', prop: 'mine' })
           expect(newUser.name).to.equal('All New User')
           expect(newUser.prop).to.equal('mine')
         })

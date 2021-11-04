@@ -149,7 +149,7 @@ class Brain extends EventEmitter {
   // Returns a User instance of the specified user.
   userForId (id, options) {
     let domainId
-    if (!options && typeof options === 'string') {
+    if (typeof options === 'string') {
       domainId = options
       options = undefined
     }

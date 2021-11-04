@@ -280,6 +280,13 @@ describe('Brain', function () {
       })
     })
 
+    describe('#users', function () {
+      it('returns all user objects if mock robot (no adapter)', function () {
+        const result = this.brain.users()
+        expect(Object.keys(result)).to.deep.equal(['1', '2', '3'])
+      })
+    })
+
     describe('#rooms', function () {
       it('returns the empty value if mock robot', function () {
         expect(this.brain.rooms()).to.deep.equal({})

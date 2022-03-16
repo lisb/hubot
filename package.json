@@ -1,6 +1,6 @@
 {
   "name": "lisb-hubot",
-  "version": "3.5.1+forked.3.3.2",
+  "version": "4.0.0+forked.3.3.2",
   "author": "hubot",
   "keywords": [
     "github",
@@ -15,13 +15,13 @@
     "url": "https://github.com/lisb/hubot.git"
   },
   "dependencies": {
-    "hubot-direct": "^1.0.0",
     "async": ">=0.1.0 <1.0.0",
     "chalk": "^1.0.0",
     "cline": "^0.8.2",
     "coffeescript": "1.6.3",
     "connect-multiparty": "^2.1.1",
     "express": "^4.16.3",
+    "hubot-direct": ">=2 <3",
     "log": "1.4.0",
     "optparse": "1.0.4",
     "scoped-http-client": "0.11.0"
@@ -41,8 +41,8 @@
     "typescript": "^2.5.3"
   },
   "engines": {
-    "node": "> 4.0.0",
-    "npm": "> 2.0.0"
+    "node": ">= 12",
+    "npm": ">= 7"
   },
   "main": "./index",
   "types": "./types/index.d.ts",

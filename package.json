@@ -41,8 +41,8 @@
     "typescript": "^2.5.3"
   },
   "engines": {
-    "node": "> 4.0.0",
-    "npm": "> 2.0.0"
+    "node": ">= 12",
+    "npm": ">= 7"
   },
   "main": "./index",
   "types": "./types/index.d.ts",

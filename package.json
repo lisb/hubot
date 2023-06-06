@@ -41,7 +41,7 @@
     "typescript": "^2.5.3"
   },
   "engines": {
-    "node": ">= 12",
+    "node": ">= 14",
     "npm": ">= 7"
   },
   "main": "./index",

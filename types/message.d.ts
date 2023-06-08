@@ -13,14 +13,19 @@ export interface Message {
   roomType: DirectTalkType;
   roomTopic: string;
   roomUsers: User[];
-  rooms: {[id: string]: DirectTalk};
+  rooms: { [id: string]: DirectTalk };
 }
 
 export type MessageId = string;
+export type Mention = { user: { id: string } };
 
 export interface TextMessage extends Message {
   text: string;
   id: MessageId;
+
+  mentionAll: boolean;
+  mentionMe: boolean;
+  mentions: Mention[];
 }
 
 export interface EnterMessage extends Message {}

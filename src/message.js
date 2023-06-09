@@ -30,15 +30,16 @@ class TextMessage extends Message {
   // user - A User instance that sent the message.
   // text - A String message.
   // id   - A String of the message ID.
-  // mention - A mention data of the message.
+  // mention - A mention data of the message. (optional)
   constructor (user, text, id, mention) {
     super(user)
     this.text = text
     this.id = id
-
-    this.mentionAll = mention.all || false
-    this.mentionMe = mention.me || false
-    this.mentions = mention.data || []
+    if (mention) {
+      this.mentionAll = mention.all || false
+      this.mentionMe = mention.me || false
+      this.mentions = mention.data || []
+    }
   }
 
   // Determines if the message matches the given regex.

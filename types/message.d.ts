@@ -23,9 +23,9 @@ export interface TextMessage extends Message {
   text: string;
   id: MessageId;
 
-  mentionAll: boolean;
-  mentionMe: boolean;
-  mentions: Mention[];
+  mentionAll?: boolean;
+  mentionMe?: boolean;
+  mentions?: Mention[];
 }
 
 export interface EnterMessage extends Message {}

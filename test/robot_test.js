@@ -21,22 +21,24 @@ const JoinMessage = require('../src/message').JoinMessage
 
 // mock `hubot-mock-adapter` module from fixture
 const mockery = require('mockery')
+const path = require('path')
 
 describe('Robot', function () {
-  beforeEach(function () {
+  beforeEach(async function () {
     mockery.enable({
       warnOnReplace: false,
       warnOnUnregistered: false
     })
-    mockery.registerMock('hubot-mock-adapter', require('./fixtures/mock-adapter'))
-    this.robot = new Robot(null, 'mock-adapter', true, 'TestHubot')
+    mockery.registerMock('hubot-mock-adapter', require('./fixtures/mock-adapter.js'))
+    process.env.EXPRESS_PORT = 0
+    this.robot = new Robot('mock-adapter', true, 'TestHubot')
     this.robot.alias = 'Hubot'
+    await this.robot.loadAdapter()
     this.robot.run()
 
     // Re-throw AssertionErrors for clearer test failures
     this.robot.on('error', function (name, err, response) {
-      if ((err != null ? err.constructor : undefined) == null) { }
-      if (err.constructor.name === 'AssertionError') {
+      if (err?.constructor.name === 'AssertionError' || name instanceof chai.AssertionError) {
         process.nextTick(function () {
           throw err
         })
@@ -70,7 +72,7 @@ describe('Robot', function () {
 
       it('passes options through to the ScopedHttpClient', function () {
         const agent = {}
-        const httpClient = this.robot.http('http://localhost', {agent})
+        const httpClient = this.robot.http('http://localhost', { agent })
         expect(httpClient.options.agent).to.equal(agent)
       })
 
@@ -80,7 +82,7 @@ describe('Robot', function () {
 
       it('merges in any global http options', function () {
         const agent = {}
-        this.robot.globalHttpOptions = {agent}
+        this.robot.globalHttpOptions = { agent }
         const httpClient = this.robot.http('http://localhost')
         expect(httpClient.options.agent).to.equal(agent)
       })
@@ -88,9 +90,17 @@ describe('Robot', function () {
       it('local options override global http options', function () {
         const agentA = {}
         const agentB = {}
-        this.robot.globalHttpOptions = {agent: agentA}
-        const httpClient = this.robot.http('http://localhost', {agent: agentB})
+        this.robot.globalHttpOptions = { agent: agentA }
+        const httpClient = this.robot.http('http://localhost', { agent: agentB })
         expect(httpClient.options.agent).to.equal(agentB)
+      })
+
+      it('builds the url correctly from a string', function () {
+        const options = this.httpClient.buildOptions('http://localhost:3001')
+        expect(options.host).to.equal('localhost:3001')
+        expect(options.pathname).to.equal('/')
+        expect(options.protocol).to.equal('http:')
+        expect(options.port).to.equal('3001')
       })
     })
 
@@ -303,7 +313,7 @@ describe('Robot', function () {
         }
 
         const listenerSpy =
-          {call: sinon.spy()}
+          { call: sinon.spy() }
 
         this.robot.listeners = [
           matchingListener,
@@ -366,7 +376,7 @@ describe('Robot', function () {
 
     describe('#loadFile', function () {
       beforeEach(function () {
-        this.sandbox = sinon.sandbox.create()
+        this.sandbox = sinon.createSandbox()
       })
 
       afterEach(function () {
@@ -380,8 +390,8 @@ describe('Robot', function () {
         this.sandbox.stub(module, '_load').returns(script)
         this.sandbox.stub(this.robot, 'parseHelp')
 
-        this.robot.loadFile('./scripts', 'test-script.js')
-        expect(module._load).to.have.been.calledWith('scripts/test-script')
+        this.robot.loadFile('./scripts', 'TestScript.js')
+        expect(module._load).to.have.been.calledWith(path.join('scripts', 'TestScript'))
       })
 
       describe('proper script', function () {
@@ -394,13 +404,13 @@ describe('Robot', function () {
         })
 
         it('should call the script with the Robot', function () {
-          this.robot.loadFile('./scripts', 'test-script.js')
+          this.robot.loadFile('./scripts', 'TestScript.js')
           expect(this.script).to.have.been.calledWith(this.robot)
         })
 
         it('should parse the script documentation', function () {
-          this.robot.loadFile('./scripts', 'test-script.js')
-          expect(this.robot.parseHelp).to.have.been.calledWith('scripts/test-script.js')
+          this.robot.loadFile('./scripts', 'TestScript.js')
+          expect(this.robot.parseHelp).to.have.been.calledWith(path.join('scripts', 'TestScript.js'))
         })
       })
 
@@ -413,9 +423,15 @@ describe('Robot', function () {
           this.sandbox.stub(this.robot, 'parseHelp')
         })
 
-        it('logs a warning', function () {
+        it('logs a warning for a .js file', function () {
           sinon.stub(this.robot.logger, 'warning')
-          this.robot.loadFile('./scripts', 'test-script.js')
+          this.robot.loadFile('./scripts', 'TestScript.js')
+          expect(this.robot.logger.warning).to.have.been.called
+        })
+
+        it('logs a warning for a .mjs file', function () {
+          sinon.stub(this.robot.logger, 'warning')
+          this.robot.loadFile('./scripts', 'TestScript.mjs')
           expect(this.robot.logger.warning).to.have.been.called
         })
       })
@@ -746,7 +762,7 @@ describe('Robot', function () {
       this.robot.catchAll(catchAllCallback)
 
       this.robot.receive(testMessage, function () {
-        expect(listenerCallback).to.have.been.called.once
+        expect(listenerCallback).to.have.been.calledOnce
         expect(catchAllCallback).to.not.have.been.called
         done()
       })
@@ -1050,7 +1066,7 @@ describe('Robot', function () {
       })
 
       it('marks plaintext as plaintext', function (testDone) {
-        let sendSpy = sinon.spy()
+        const sendSpy = sinon.spy()
         this.robot.adapter.send = sendSpy
         this.robot.hear(/^message123$/, response => response.send('foobar, sir, foobar.'))
         this.robot.hear(/^message456$/, response => response.play('good luck with that'))
@@ -1101,5 +1117,74 @@ describe('Robot', function () {
         })
       })
     })
+  })
+})
+
+describe('Robot Defaults', () => {
+  let robot = null
+  beforeEach(async () => {
+    process.env.EXPRESS_PORT = 0
+    robot = new Robot(null, true, 'TestHubot')
+    robot.alias = 'Hubot'
+    await robot.loadAdapter()
+    robot.run()
+  })
+  afterEach(() => {
+    robot.shutdown()
+  })
+  it('should load the builtin shell adapter by default', async () => {
+    expect(robot.adapter.name).to.equal('Shell')
+  })
+})
+
+describe('Robot ES6', () => {
+  let robot = null
+  beforeEach(async () => {
+    process.env.EXPRESS_PORT = 0
+    robot = new Robot('MockAdapter', true, 'TestHubot')
+    robot.alias = 'Hubot'
+    await robot.loadAdapter('./test/fixtures/MockAdapter.mjs')
+    robot.loadFile(path.resolve('./test/fixtures/'), 'TestScript.js')
+    robot.run()
+  })
+  afterEach(() => {
+    robot.shutdown()
+  })
+  it('should load an ES6 module adapter from a file', async () => {
+    const { MockAdapter } = await import('./fixtures/MockAdapter.mjs')
+    expect(robot.adapter).to.be.an.instanceOf(MockAdapter)
+    expect(robot.adapter.name).to.equal('MockAdapter')
+  })
+  it('should respond to a message', async () => {
+    const sent = (envelop, strings) => {
+      expect(strings).to.deep.equal(['test response'])
+    }
+    robot.adapter.on('send', sent)
+    await robot.adapter.receive(new TextMessage('tester', 'hubot test'))
+  })
+})
+
+describe('Robot Coffeescript', () => {
+  let robot = null
+  beforeEach(async () => {
+    process.env.EXPRESS_PORT = 0
+    robot = new Robot('MockAdapter', true, 'TestHubot')
+    robot.alias = 'Hubot'
+    await robot.loadAdapter('./test/fixtures/MockAdapter.coffee')
+    robot.loadFile(path.resolve('./test/fixtures/'), 'TestScript.coffee')
+    robot.run()
+  })
+  afterEach(() => {
+    robot.shutdown()
+  })
+  it('should load a CoffeeScript adapter from a file', async () => {
+    expect(robot.adapter.name).to.equal('MockAdapter')
+  })
+  it('should load a coffeescript file and respond to a message', async () => {
+    const sent = (envelop, strings) => {
+      expect(strings).to.deep.equal(['test response from coffeescript'])
+    }
+    robot.adapter.on('send', sent)
+    await robot.adapter.receive(new TextMessage('tester', 'hubot test'))
   })
 })

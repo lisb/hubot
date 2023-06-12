@@ -4,23 +4,28 @@ const fs = require('fs')
 const readline = require('readline')
 const Stream = require('stream')
 const cline = require('cline')
-const chalk = require('chalk')
 
 const Adapter = require('../adapter')
 
-var _require = require('../message')
+const _require = require('../message')
 
 const TextMessage = _require.TextMessage
 
 const historySize = process.env.HUBOT_SHELL_HISTSIZE != null ? parseInt(process.env.HUBOT_SHELL_HISTSIZE) : 1024
 
 const historyPath = '.hubot_history'
+const bold = str => `\x1b[1m${str}\x1b[22m`
 
 class Shell extends Adapter {
+  constructor (robot) {
+    super(robot)
+    this.name = 'Shell'
+  }
+
   send (envelope/* , ...strings */) {
     const strings = [].slice.call(arguments, 1)
 
-    Array.from(strings).forEach(str => console.log(chalk.bold(`${str}`)))
+    Array.from(strings).forEach(str => console.log(bold(str)))
   }
 
   emote (envelope/* , ...strings */) {
@@ -36,15 +41,13 @@ class Shell extends Adapter {
 
   run () {
     this.buildCli()
-
     loadHistory((error, history) => {
       if (error) {
         console.log(error.message)
       }
-
       this.cli.history(history)
       this.cli.interact(`${this.robot.name}> `)
-      return this.emit('connected')
+      return this.emit('connected', this)
     })
   }
 
@@ -82,7 +85,7 @@ class Shell extends Adapter {
     })
 
     this.cli.on('close', () => {
-      let fileOpts, history, i, item, len, outstream, startIndex
+      let history, i, item, len
 
       history = this.cli.history()
 
@@ -90,25 +93,24 @@ class Shell extends Adapter {
         return this.shutdown()
       }
 
-      startIndex = history.length - historySize
+      const startIndex = history.length - historySize
       history = history.reverse().splice(startIndex, historySize)
-      fileOpts = {
+      const fileOpts = {
         mode: 0x180
       }
 
-      outstream = fs.createWriteStream(historyPath, fileOpts)
-      outstream.on('finish', this.shutdown.bind(this))
-
+      const outstream = fs.createWriteStream(historyPath, fileOpts)
+      outstream.on('end', this.shutdown.bind(this))
       for (i = 0, len = history.length; i < len; i++) {
         item = history[i]
         outstream.write(item + '\n')
       }
-
-      outstream.end(this.shutdown.bind(this))
     })
   }
 }
 
+// Prevent output buffer "swallowing" every other character on OSX / Node version > 16.19.0.
+process.stdout._handle.setBlocking(false)
 exports.use = robot => new Shell(robot)
 
 // load history from .hubot_history.

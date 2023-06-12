@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/hubotio/hubot.svg?branch=master)](https://travis-ci.org/hubotio/hubot) [![Coverage Status](https://coveralls.io/repos/github/hubotio/hubot/badge.svg?branch=master)](https://coveralls.io/github/hubotio/hubot?branch=master)
+![Build Status: MacOS](https://github.com/hubotio/hubot/actions/workflows/nodejs-macos.yml/badge.svg)
+![Build Status: Ubuntu](https://github.com/hubotio/hubot/actions/workflows/nodejs-ubuntu.yml/badge.svg)
+![Build Status: Window](https://github.com/hubotio/hubot/actions/workflows/nodejs-windows.yml/badge.svg)
 
 # Hubot
 
@@ -12,8 +14,6 @@ for details on getting up and running with your very own robot friend.
 
 In most cases, you'll probably never have to hack on this repo directly if you
 are building your own bot. But if you do, check out [CONTRIBUTING.md](CONTRIBUTING.md)
-
-If you'd like to chat with Hubot users and developers, [join us on Slack](https://hubot-slackin.herokuapp.com/).
 
 ## License
 

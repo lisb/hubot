@@ -32,7 +32,7 @@ const loadBot = Hubot.loadBot
 describe('hubot/es2015', function () {
   it('exports User class', function () {
     class MyUser extends User {}
-    const user = new MyUser('id123', {foo: 'bar'})
+    const user = new MyUser('id123', { foo: 'bar' })
 
     expect(user).to.be.an.instanceof(User)
     expect(user.id).to.equal('id123')
@@ -53,16 +53,16 @@ describe('hubot/es2015', function () {
     expect(brain.get('foo')).to.equal('bar')
   })
 
-  it('exports Robot class', function () {
+  it('exports Robot class', async function () {
     mockery.enable({
       warnOnReplace: false,
       warnOnUnregistered: false
     })
-    mockery.registerMock('hubot-mock-adapter', require('./fixtures/mock-adapter'))
+    mockery.registerMock('hubot-mock-adapter', require('./fixtures/mock-adapter.js'))
 
     class MyRobot extends Robot {}
-    const robot = new MyRobot(null, 'mock-adapter', false, 'TestHubot')
-
+    const robot = new MyRobot('mock-adapter', false, 'TestHubot')
+    await robot.loadAdapter()
     expect(robot).to.be.an.instanceof(Robot)
     expect(robot.name).to.equal('TestHubot')
 
@@ -205,7 +205,7 @@ describe('hubot/es2015', function () {
     sinon.stub(Hubot, 'Robot')
 
     expect(loadBot).to.be.a('function')
-    Hubot.loadBot('adapterPath', 'adapterName', 'enableHttpd', 'botName', 'botAlias')
-    expect(Hubot.Robot).to.be.called.calledWith('adapterPath', 'adapterName', 'enableHttpd', 'botName', 'botAlias')
+    Hubot.loadBot(null, 'adapter', 'enableHttpd', 'botName', 'botAlias')
+    expect(Hubot.Robot).to.be.called.calledWith(null, 'adapter', 'enableHttpd', 'botName', 'botAlias')
   })
 })

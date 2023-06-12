@@ -341,11 +341,11 @@ describe('Brain', function () {
 
     it('returns User objects, not POJOs', function () {
       expect(this.brain.userForId('1').constructor.name).to.equal('User')
-      for (let user of this.brain.usersForFuzzyName('Guy')) {
+      for (const user of this.brain.usersForFuzzyName('Guy')) {
         expect(user.constructor.name).to.equal('User')
       }
 
-      for (let user of this.brain.usersForRawFuzzyName('Guy One')) {
+      for (const user of this.brain.usersForRawFuzzyName('Guy One')) {
         expect(user.constructor.name).to.equal('User')
       }
 

@@ -117,7 +117,7 @@ class Brain extends EventEmitter {
   //
   // Caveats: Deeply nested structures don't merge well.
   mergeData (data) {
-    for (let k in data || {}) {
+    for (const k in data || {}) {
       this.data[k] = data[k]
     }
 
@@ -182,8 +182,8 @@ class Brain extends EventEmitter {
     let result = null
     const lowerName = name.toLowerCase()
     const users = this.users(domainId)
-    for (let k in users || {}) {
-      const userName = users[k]['name']
+    for (const k in users || {}) {
+      const userName = this.data.users[k].name
       if (userName != null && userName.toString().toLowerCase() === lowerName) {
         result = users[k]
       }

@@ -491,9 +491,9 @@ describe('Robot', function () {
       })
 
       it('delegates to adapter "topic" with proper context', function () {
-        this.robot.roomTopic({room: '12345'}, 'test title')
+        this.robot.roomTopic({ room: '12345' }, 'test title')
         expect(this.robot.adapter.topic).to.have.been.calledOn(this.robot.adapter)
-        expect(this.robot.adapter.topic).to.have.been.calledWith({room: '12345'}, 'test title')
+        expect(this.robot.adapter.topic).to.have.been.calledWith({ room: '12345' }, 'test title')
       })
     })
 

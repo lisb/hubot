@@ -123,11 +123,11 @@ class Brain extends EventEmitter {
 
     // for old daab versions.
     ['users', 'talks', 'domains']
-    .filter(m => this.data[m] && Object.keys(this.data[m]).length > 0)
-    .forEach(m => {
-      console.warn(`Please use brain.${m}().`)
-      this.data[m] = {}
-    })
+      .filter(m => this.data[m] && Object.keys(this.data[m]).length > 0)
+      .forEach(m => {
+        console.warn(`Please use brain.${m}().`)
+        this.data[m] = {}
+      })
 
     this.emit('loaded', this.data)
   }
@@ -183,7 +183,7 @@ class Brain extends EventEmitter {
     const lowerName = name.toLowerCase()
     const users = this.users(domainId)
     for (const k in users || {}) {
-      const userName = this.data.users[k].name
+      const userName = users[k].name
       if (userName != null && userName.toString().toLowerCase() === lowerName) {
         result = users[k]
       }

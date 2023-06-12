@@ -62,8 +62,8 @@ describe('Brain', function () {
       })
 
       it('discards loaded data and creates new user object instead', function () {
-        this.brain.mergeData({ users: { '4': { 'name': 'new', 'id': '4' } } })
-        let user = this.brain.userForId('4')
+        this.brain.mergeData({ users: { 4: { name: 'new', id: '4' } } })
+        const user = this.brain.userForId('4')
         expect(user.constructor.name).to.equal('User')
         expect(user.id).to.equal('4')
         expect(user.name).to.equal('4')

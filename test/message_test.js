@@ -33,7 +33,7 @@ describe('Message', function () {
       })
     )
 
-    describe('TextMessage', () =>
+    describe('TextMessage', function () {
       describe('#match', () =>
         it('should perform standard regex matching', function () {
           const testMessage = new TextMessage(this.user, 'message123')
@@ -41,6 +41,16 @@ describe('Message', function () {
           expect(testMessage.match(/^does-not-match$/)).to.not.be.ok
         })
       )
-    )
+
+      describe('#mention*', () =>
+        it('sets mention attributes passed in', function () {
+          const mention = { all: false, me: true, data: [{ user: {id: 2} }] }
+          const testMessage = new TextMessage(this.user, 'message123', 'mid-1', mention)
+          expect(testMessage.mentionAll).to.not.be.ok
+          expect(testMessage.mentionMe).to.be.ok
+          expect(testMessage.mentions).to.be.deep.equal([{user: {id: 2}}])
+        })
+      )
+    })
   })
 })

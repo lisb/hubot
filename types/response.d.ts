@@ -16,6 +16,7 @@ export interface Response<M extends Message> {
   announce(...content: string[]): void;
   leave(user?: {id: string}): void;
   topic(...content: string[]): void;
+  finish(): void;
   http(url: string, options: object): HttpClient;
 }
 

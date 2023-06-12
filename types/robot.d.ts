@@ -18,8 +18,18 @@ export interface Robot {
   listen<M extends Message>(matcher: Matcher, options: object, callback: Callback<M>): void;
 
   hear(regex: RegExp, callback: Callback<TextMessage>): void;
-  respond(regex: RegExp, callback: Callback<TextMessage>): void;
+  hear(type: "stamp", callback: TypedJsonCallback<"stamp", Stamp>): void;
+  hear(type: "yesno", callback: TypedJsonCallback<"yesno", YesNoWithResponse>): void;
+  hear(type: "select", callback: TypedJsonCallback<"select", SelectWithResponse>): void;
+  hear(type: "task", callback: TypedJsonCallback<"task", TaskWithResponse>): void;
+  hear(type: "file", callback: TypedJsonCallback<"file", RemoteFile>): void;
+  hear(type: "files", callback: TypedJsonCallback<"files", RemoteFiles>): void;
+  hear(type: "map", callback: TypedJsonCallback<"map", ActualLocation>): void;
+  hear(type: "note_created", callback: TypedJsonCallback<"note_created", NoteCreated>): void;
+  hear(type: "note_updated", callback: TypedJsonCallback<"note_updated", NoteUpdated>): void;
+  hear(type: "note_deleted", callback: TypedJsonCallback<"note_deleted", NoteDeleted>): void;
 
+  respond(regex: RegExp, callback: Callback<TextMessage>): void;
   respond(type: "stamp", callback: TypedJsonCallback<"stamp", Stamp>): void;
   respond(type: "yesno", callback: TypedJsonCallback<"yesno", YesNoWithResponse>): void;
   respond(type: "select", callback: TypedJsonCallback<"select", SelectWithResponse>): void;

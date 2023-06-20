@@ -15,30 +15,26 @@
     "url": "https://github.com/lisb/hubot.git"
   },
   "dependencies": {
-    "async": ">=0.1.0 <1.0.0",
-    "chalk": "^1.0.0",
+    "async": "^3.2.4",
     "cline": "^0.8.2",
-    "coffeescript": "1.6.3",
-    "connect-multiparty": "^2.1.1",
-    "express": "^4.16.3",
-    "hubot-direct": ">=2 <3",
-    "log": "1.4.0",
-    "optparse": "1.0.4",
-    "scoped-http-client": "0.11.0"
+    "coffeescript": "^2.7.0",
+    "connect-multiparty": "^2.2.0",
+    "express": "^4.18.2",
+    "express-basic-auth": "^1.2.1",
+    "optparse": "^1.0.5",
+    "pino": "^8.11.0"
   },
   "devDependencies": {
-    "@types/node": "^8.0.34",
-    "chai": "~2.1.0",
-    "coveralls": "^3.0.2",
+    "chai": "^4.3.7",
     "is-circular": "^1.0.2",
-    "mocha": "^5.2.0",
-    "mockery": "^1.4.0",
-    "nyc": "^13.0.0",
-    "semantic-release": "^15.9.3",
-    "sinon": "~1.17.0",
-    "sinon-chai": "^2.8.0",
-    "standard": "^10.0.2",
-    "typescript": "^2.5.3"
+    "mocha": "^10.2.0",
+    "mockery": "^2.1.0",
+    "semantic-release": "^21.0.1",
+    "sinon": "^15.0.4",
+    "sinon-chai": "^3.7.0",
+    "standard": "^17.0.0",
+    "@types/node": "^14",
+    "typescript": "^5"
   },
   "engines": {
     "node": ">= 14",
@@ -52,10 +48,15 @@
   "scripts": {
     "start": "bin/hubot",
     "pretest": "standard",
-    "test": "nyc --reporter=html --reporter=text mocha --timeout 3000",
-    "test:types": "tsc -p ./test-types/tsconfig.json",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test": "mocha --exit",
     "test:smoke": "node src/**/*.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "test:types": "tsc -p ./test-types/tsconfig.json"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
+    ],
+    "dryRun": false
   }
 }

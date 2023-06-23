@@ -15,6 +15,7 @@
     "url": "https://github.com/lisb/hubot.git"
   },
   "dependencies": {
+    "@types/hubot": "^3.3.2",
     "async": "^3.2.4",
     "cline": "^0.8.2",
     "coffeescript": "^2.7.0",
@@ -39,6 +40,7 @@
     "npm": ">= 7"
   },
   "main": "./index",
+  "types": "./types/index.d.ts",
   "bin": {
     "hubot": "./bin/hubot"
   },

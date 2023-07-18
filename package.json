@@ -15,6 +15,7 @@
     "url": "https://github.com/lisb/hubot.git"
   },
   "dependencies": {
+    "@types/hubot": "^3.3.2",
     "async": "^3.2.4",
     "cline": "^0.8.2",
     "coffeescript": "^2.7.0",
@@ -32,9 +33,7 @@
     "semantic-release": "^21.0.1",
     "sinon": "^15.0.4",
     "sinon-chai": "^3.7.0",
-    "standard": "^17.0.0",
-    "@types/node": "^14",
-    "typescript": "^5"
+    "standard": "^17.0.0"
   },
   "engines": {
     "node": ">= 14",
@@ -49,8 +48,7 @@
     "start": "bin/hubot",
     "pretest": "standard",
     "test": "mocha --exit",
-    "test:smoke": "node src/**/*.js",
-    "test:types": "tsc -p ./test-types/tsconfig.json"
+    "test:smoke": "node src/**/*.js"
   },
   "release": {
     "branches": [

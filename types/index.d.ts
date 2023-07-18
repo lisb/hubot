@@ -1,9 +1,9 @@
-// Copyright (c) 2017 Sho Kuroda <krdlab@gmail.com>
-// Released under the MIT license.
+// Copyright (c) 2023 L is B Corp.
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
 
-export * from "./direct";
-export * from "./brain";
-export * from "./http";
-export * from "./message";
-export * from "./response";
-export * from "./robot";
+import Hubot from "hubot";
+
+export = Hubot;
+export as namespace Hubot;

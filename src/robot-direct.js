@@ -42,6 +42,8 @@ const jsonMatcher = (prop, options, callback) => {
     switch (prop) {
       case 'stamp':
         return !!obj.stamp_set && !!obj.stamp_index
+      case 'original_stamp':
+        return !!obj.stampset_id && !!obj.stamp_id
       case 'yesno':
         return !!obj.question && !obj.options
       case 'select':

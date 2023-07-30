@@ -1,8 +1,12 @@
-![Build Status: MacOS](https://github.com/hubotio/hubot/actions/workflows/nodejs-macos.yml/badge.svg)
-![Build Status: Ubuntu](https://github.com/hubotio/hubot/actions/workflows/nodejs-ubuntu.yml/badge.svg)
-![Build Status: Window](https://github.com/hubotio/hubot/actions/workflows/nodejs-windows.yml/badge.svg)
+![Build Status: MacOS](https://github.com/lisb/hubot/actions/workflows/nodejs-macos.yml/badge.svg)
+![Build Status: Ubuntu](https://github.com/lisb/hubot/actions/workflows/nodejs-ubuntu.yml/badge.svg)
+![Build Status: Window](https://github.com/lisb/hubot/actions/workflows/nodejs-windows.yml/badge.svg)
 
-# Hubot
+# lisb-hubot
+
+`lisb-hubot` is a fork from [hubot](https://github.com/hubotio/hubot) and customized for direct.
+
+## Hubot
 
 Hubot is a framework to build chat bots, modeled after GitHub's Campfire bot of the same name, hubot.
 He's pretty cool. He's [extendable with scripts](http://hubot.github.com/docs/#scripts) and can work

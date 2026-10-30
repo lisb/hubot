@@ -6,3 +6,6 @@ test
 docs
 examples
 script
+coverage
+.devcontainer
+.nyc_output

@@ -1,6 +1,6 @@
 {
   "name": "lisb-hubot",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "author": "hubot",
   "keywords": [
     "github",
@@ -15,25 +15,25 @@
     "url": "https://github.com/lisb/hubot.git"
   },
   "dependencies": {
-    "@types/hubot": "^3.3.2",
-    "async": "^3.2.4",
+    "@types/hubot": "^3.3.7",
+    "async": "^3.2.6",
     "cline": "^0.8.2",
-    "coffeescript": "^2.7.0",
+    "coffeescript": "^2.7.1",
     "connect-multiparty": "^2.2.0",
-    "express": "^4.18.2",
+    "express": "^4.22.3",
     "express-basic-auth": "^1.2.1",
     "optparse": "^1.0.5",
-    "pino": "^8.11.0"
+    "pino": "^8.21.0"
   },
   "devDependencies": {
-    "chai": "^4.3.7",
+    "chai": "^4.5.0",
     "is-circular": "^1.0.2",
-    "mocha": "^10.2.0",
+    "mocha": "^12.0.3",
     "mockery": "^2.1.0",
     "semantic-release": "^21.0.1",
-    "sinon": "^15.0.4",
+    "sinon": "^15.2.0",
     "sinon-chai": "^3.7.0",
-    "standard": "^17.0.0"
+    "standard": "^17.1.2"
   },
   "engines": {
     "node": ">= 14",
